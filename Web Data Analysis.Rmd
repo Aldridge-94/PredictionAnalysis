@@ -1,0 +1,77 @@
+```{r}
+
+install.packages("broom")
+install.packages("tidyverse")
+install.packages("tidytext")
+install.packages("ggplot2")
+install.packages("widyr")
+install.packages("readxl")
+install.packages("plyr")
+install.packages("dplyr")
+
+library(broom)
+library(tidyverse)
+library(tidytext)
+library(ggplot2)
+library(widyr)
+library(readxl)
+library(plyr)
+library(dplyr)
+```
+
+
+##Read in the data
+
+```{r}
+
+setwd("D:/Buisness Analyst/Data Science wirh R/Project/Web Data Analysis")
+getwd()
+Data <- read.csv("1555058318_internet_dataset.csv", stringsAsFactors = TRUE)
+Data <- tibble::as.tibble(Data)
+print(Data)
+
+```
+##Exploratory Data Analysis
+
+```{r}
+View(Data)
+str(Data)
+
+##Which continent/sourcegroup has the largest number of visitors?
+  ##Data %>%
+  ##count(Sourcegroup, sort = TRUE)%>% 
+  ##mutate(Sourcegroup = fct_reorder(Sourcegroup, n))%>%
+  ##ggplot(aes(Sourcegroup, n))+
+  ##geom_col()+
+  ##coord_flip()
+  
+  ##Data %>%
+  ##count(Continent, sort = TRUE)%>% 
+  ##mutate(Continent = fct_reorder(Continent, n))%>%
+  ##ggplot(aes(Continent, n))+
+  ##geom_col()+
+  ##coord_flip()
+  
+##Scatterplot for variation across continents 
+
+ggplot(Data, aes(x= Uniquepageviews, y = Visits, color = Sourcegroup))+
+  geom_point()+
+  labs(x = "Unique Page Views", y = "Customer Visits", title = "Scatterplot for Customer Visits on Unique    Pages")+
+  geom_smooth(method = "lm", se = FALSE)+
+  facet_wrap(~Continent)
+
+##What factors influence visitors to spend time on the web?
+
+summary(Data)
+
+results <- lm(formula = Bounces ~ Timeinpage + Visits + Uniquepageviews + Continent + Sourcegroup, data = Data)
+
+print(results)
+  
+
+summary(results)
+
+
+```
+
+
